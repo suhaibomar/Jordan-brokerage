@@ -15,18 +15,12 @@ import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   MapPin,
-  Bed,
-  Bath,
-  Maximize,
   Building,
-  Calendar,
   Share2,
   Heart,
   Phone,
   MessageCircle,
-  Copy,
   Check,
-  Home,
   Building2,
   Sofa,
   Fan,
@@ -36,8 +30,8 @@ import {
   Warehouse,
   Thermometer,
   ArrowUp,
-  TreePine,
-  Zap,
+  Globe,
+  Globe2,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { PropertyWithDetails } from '@/lib/types/database'
@@ -450,13 +444,49 @@ export default function PropertyDetailsPage() {
 
                 <TabsContent value="location" className="mt-4">
                   <Card>
-                    <CardContent className="p-6">
+                    <CardContent className="p-4 lg:p-6">
                       <div className="space-y-4">
                         <div className="flex items-center gap-2">
                           <MapPin className="h-5 w-5 text-primary" />
                           <p>{property.full_address || `${property.governorate}, ${property.city}${property.district ? `, ${property.district}` : ''}`}</p>
                         </div>
 
+                        {/* Google Maps & Earth Buttons */}
+                        {(property.google_maps_link || (property.latitude && property.longitude)) && (
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <Button
+                              className="flex-1"
+                              onClick={() => {
+                                const url = property.google_maps_link || `https://www.google.com/maps?q=${property.latitude},${property.longitude}`
+                                window.open(url, '_blank')
+                              }}
+                            >
+                              <Globe className="h-4 w-4 me-2" />
+                              {locale === 'ar' ? 'فتح في خرائط جوجل' : 'Open in Google Maps'}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              className="flex-1"
+                              onClick={() => {
+                                let earthUrl = 'https://earth.google.com/web/'
+                                if (property.latitude && property.longitude) {
+                                  earthUrl = `https://earth.google.com/web/@${property.latitude},${property.longitude},0a,0d,0y`
+                                } else if (property.google_maps_link) {
+                                  const coordsMatch = property.google_maps_link.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
+                                  if (coordsMatch) {
+                                    earthUrl = `https://earth.google.com/web/@${coordsMatch[1]},${coordsMatch[2]},0a,0d,0y`
+                                  }
+                                }
+                                window.open(earthUrl, '_blank')
+                              }}
+                            >
+                              <Globe2 className="h-4 w-4 me-2" />
+                              {locale === 'ar' ? 'فتح في جوجل إيرث' : 'Open in Google Earth'}
+                            </Button>
+                          </div>
+                        )}
+
+                        {/* Map Preview */}
                         {property.google_maps_link ? (
                           <a
                             href={property.google_maps_link}
@@ -464,10 +494,13 @@ export default function PropertyDetailsPage() {
                             rel="noopener noreferrer"
                             className="block"
                           >
-                            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                              <span className="text-primary">
-                                {locale === 'ar' ? 'فتح في خرائط جوجل' : 'Open in Google Maps'}
-                              </span>
+                            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center hover:bg-muted/80 transition-colors">
+                              <div className="text-center">
+                                <Globe className="h-12 w-12 mx-auto text-primary mb-2" />
+                                <span className="text-primary">
+                                  {locale === 'ar' ? 'فتح في خرائط جوجل' : 'Open in Google Maps'}
+                                </span>
+                              </div>
                             </div>
                           </a>
                         ) : property.latitude && property.longitude ? (
@@ -477,10 +510,13 @@ export default function PropertyDetailsPage() {
                             rel="noopener noreferrer"
                             className="block"
                           >
-                            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                              <span className="text-primary">
-                                {locale === 'ar' ? 'عرض الخريطة' : 'View Map'}
-                              </span>
+                            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center hover:bg-muted/80 transition-colors">
+                              <div className="text-center">
+                                <Globe className="h-12 w-12 mx-auto text-primary mb-2" />
+                                <span className="text-primary">
+                                  {locale === 'ar' ? 'عرض الخريطة' : 'View Map'}
+                                </span>
+                              </div>
                             </div>
                           </a>
                         ) : (

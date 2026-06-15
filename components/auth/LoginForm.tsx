@@ -51,7 +51,8 @@ export function LoginForm() {
       return
     }
 
-    router.push(locale === 'ar' ? '/dashboard' : '/en/dashboard')
+    // Redirect to home page after successful login
+    router.push('/')
   }
 
   return (

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -34,7 +34,7 @@ export function RegisterForm() {
   const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const { signUp } = useAuth()
+  const { signUp, user } = useAuth()
   const router = useRouter()
 
   const {
@@ -44,6 +44,13 @@ export function RegisterForm() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   })
+
+  // Auto-redirect when user is logged in after registration
+  useEffect(() => {
+    if (success && user) {
+      router.push('/')
+    }
+  }, [success, user, router])
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true)
@@ -74,14 +81,11 @@ export function RegisterForm() {
           </div>
           <h2 className="text-xl font-semibold">تم إنشاء الحساب بنجاح</h2>
           <p className="text-muted-foreground">
-            يمكنك الآن تسجيل الدخول باستخدام بياناتك
+            جاري تحويلك للصفحة الرئيسية...
           </p>
-          <Button
-            onClick={() => router.push('/login')}
-            className="w-full mt-4"
-          >
-            تسجيل الدخول
-          </Button>
+          <div className="flex justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
         </CardContent>
       </Card>
     )

@@ -13,9 +13,10 @@ import {
   MapPin,
   Bed,
   Bath,
-  Maximize,
   Building,
   Share2,
+  Globe,
+  Globe2,
 } from 'lucide-react'
 import type { Property, PropertyImage } from '@/lib/types/database'
 
@@ -67,6 +68,21 @@ export function PropertyCard({ property, showFavoriteButton = true }: PropertyCa
   }
 
   const propertyHref = locale === 'ar' ? `/property/${property.property_number}` : `/en/property/${property.property_number}`
+
+  // Generate Google Earth URL from Maps URL
+  const getGoogleEarthUrl = (mapsUrl: string): string | null => {
+    if (!mapsUrl) return null
+    const coordsMatch = mapsUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
+    if (coordsMatch) {
+      return `https://earth.google.com/web/@${coordsMatch[1]},${coordsMatch[2]},0a,0d,0y`
+    }
+    return null
+  }
+
+  const mapsUrl = property.google_maps_link || (property.latitude && property.longitude
+    ? `https://www.google.com/maps?q=${property.latitude},${property.longitude}`
+    : null)
+  const earthUrl = mapsUrl ? getGoogleEarthUrl(mapsUrl) : null
 
   return (
     <Card className="group overflow-hidden property-card-hover">
@@ -162,6 +178,38 @@ export function PropertyCard({ property, showFavoriteButton = true }: PropertyCa
             {property.district && ` - ${property.district}`}
           </span>
         </div>
+
+        {/* Location Buttons */}
+        {mapsUrl && (
+          <div className="flex gap-2 mb-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 text-xs h-8"
+              onClick={(e) => {
+                e.preventDefault()
+                window.open(mapsUrl, '_blank')
+              }}
+            >
+              <Globe className="h-3 w-3 me-1" />
+              {locale === 'ar' ? 'خرائط جوجل' : 'Google Maps'}
+            </Button>
+            {earthUrl && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 text-xs h-8"
+                onClick={(e) => {
+                  e.preventDefault()
+                  window.open(earthUrl, '_blank')
+                }}
+              >
+                <Globe2 className="h-3 w-3 me-1" />
+                {locale === 'ar' ? 'جوجل إيرث' : 'Google Earth'}
+              </Button>
+            )}
+          </div>
+        )}
 
         {/* Features - Only for apartments */}
         {property.property_type === 'apartment' && (
