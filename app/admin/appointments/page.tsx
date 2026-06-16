@@ -34,7 +34,7 @@ export default function AdminAppointmentsPage() {
   const router = useRouter()
   const [appointments, setAppointments] = useState<(Appointment & { property?: Property })[]>([])
   const [loading, setLoading] = useState(true)
-  const [statusFilter, setStatusFilter] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
 
   useEffect(() => {
     if (!authLoading && !isAdmin) router.push('/')
@@ -62,7 +62,7 @@ export default function AdminAppointmentsPage() {
     cancelled: { ar: 'ملغي', en: 'Cancelled', color: 'bg-gray-100 text-gray-800' },
   }
 
-  const filteredAppointments = statusFilter ? appointments.filter((a) => a.status === statusFilter) : appointments
+  const filteredAppointments = statusFilter && statusFilter !== 'all' ? appointments.filter((a) => a.status === statusFilter) : appointments
 
   if (authLoading || !isAdmin) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>
 
@@ -92,7 +92,7 @@ export default function AdminAppointmentsPage() {
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]"><SelectValue placeholder={locale === 'ar' ? 'الحالة' : 'Status'} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
+                <SelectItem value="all">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
                 <SelectItem value="pending">{locale === 'ar' ? 'معلق' : 'Pending'}</SelectItem>
                 <SelectItem value="approved">{locale === 'ar' ? 'تمت الموافقة' : 'Approved'}</SelectItem>
                 <SelectItem value="completed">{locale === 'ar' ? 'مكتمل' : 'Completed'}</SelectItem>

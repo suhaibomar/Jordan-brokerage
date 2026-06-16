@@ -33,7 +33,7 @@ export default function AdminInquiriesPage() {
   const router = useRouter()
   const [inquiries, setInquiries] = useState<Inquiry[]>([])
   const [loading, setLoading] = useState(true)
-  const [statusFilter, setStatusFilter] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
 
   useEffect(() => {
     if (!authLoading && !isAdmin) router.push('/')
@@ -66,7 +66,7 @@ export default function AdminInquiriesPage() {
     visit_request: { ar: 'طلب زيارة', en: 'Visit Request' },
   }
 
-  const filteredInquiries = statusFilter ? inquiries.filter((i) => i.status === statusFilter) : inquiries
+  const filteredInquiries = statusFilter && statusFilter !== 'all' ? inquiries.filter((i) => i.status === statusFilter) : inquiries
 
   if (authLoading || !isAdmin) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>
 
@@ -97,7 +97,7 @@ export default function AdminInquiriesPage() {
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]"><SelectValue placeholder={locale === 'ar' ? 'الحالة' : 'Status'} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
+                <SelectItem value="all">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
                 <SelectItem value="new">{locale === 'ar' ? 'جديد' : 'New'}</SelectItem>
                 <SelectItem value="read">{locale === 'ar' ? 'تمت القراءة' : 'Read'}</SelectItem>
                 <SelectItem value="responded">{locale === 'ar' ? 'تم الرد' : 'Responded'}</SelectItem>

@@ -54,8 +54,8 @@ export default function AdminPropertiesPage() {
   const [properties, setProperties] = useState<(Property & { images: PropertyImage[] })[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
-  const [typeFilter, setTypeFilter] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [typeFilter, setTypeFilter] = useState('all')
 
   useEffect(() => {
     if (!authLoading && !isAdmin) {
@@ -71,10 +71,10 @@ export default function AdminPropertiesPage() {
           .select('*, images:property_images(*)')
           .order('created_at', { ascending: false })
 
-        if (statusFilter) {
+        if (statusFilter && statusFilter !== 'all') {
           query = query.eq('status', statusFilter)
         }
-        if (typeFilter) {
+        if (typeFilter && typeFilter !== 'all') {
           query = query.eq('property_type', typeFilter)
         }
         if (searchQuery) {
@@ -186,7 +186,7 @@ export default function AdminPropertiesPage() {
                 <SelectValue placeholder={locale === 'ar' ? 'الحالة' : 'Status'} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
+                <SelectItem value="all">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
                 <SelectItem value="available">{locale === 'ar' ? 'متاح' : 'Available'}</SelectItem>
                 <SelectItem value="sold">{locale === 'ar' ? 'مباع' : 'Sold'}</SelectItem>
                 <SelectItem value="rented">{locale === 'ar' ? 'مؤجر' : 'Rented'}</SelectItem>
@@ -198,7 +198,7 @@ export default function AdminPropertiesPage() {
                 <SelectValue placeholder={locale === 'ar' ? 'النوع' : 'Type'} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
+                <SelectItem value="all">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
                 <SelectItem value="apartment">{locale === 'ar' ? 'شقة' : 'Apartment'}</SelectItem>
                 <SelectItem value="land">{locale === 'ar' ? 'أرض' : 'Land'}</SelectItem>
                 <SelectItem value="building">{locale === 'ar' ? 'مبنى' : 'Building'}</SelectItem>

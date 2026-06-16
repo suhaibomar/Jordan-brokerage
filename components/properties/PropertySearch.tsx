@@ -196,12 +196,12 @@ export function PropertySearch({ variant = 'inline' }: PropertySearchProps) {
               {/* Property Type */}
               <div className="space-y-2">
                 <Label>{locale === 'ar' ? 'نوع العقار' : 'Property Type'}</Label>
-                <Select value={propertyType} onValueChange={setPropertyType}>
+                <Select value={propertyType || 'all'} onValueChange={(v) => setPropertyType(v === 'all' ? '' : v)}>
                   <SelectTrigger>
                     <SelectValue placeholder={locale === 'ar' ? 'الكل' : 'All'} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
+                    <SelectItem value="all">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
                     <SelectItem value="apartment">{locale === 'ar' ? 'شقة' : 'Apartment'}</SelectItem>
                     <SelectItem value="land">{locale === 'ar' ? 'أرض' : 'Land'}</SelectItem>
                     <SelectItem value="building">{locale === 'ar' ? 'مبنى' : 'Building'}</SelectItem>
@@ -212,12 +212,12 @@ export function PropertySearch({ variant = 'inline' }: PropertySearchProps) {
               {/* Governorate */}
               <div className="space-y-2">
                 <Label>{locale === 'ar' ? 'المحافظة' : 'Governorate'}</Label>
-                <Select value={governorate} onValueChange={setGovernorate}>
+                <Select value={governorate || 'all'} onValueChange={(v) => setGovernorate(v === 'all' ? '' : v)}>
                   <SelectTrigger>
                     <SelectValue placeholder={locale === 'ar' ? 'الكل' : 'All'} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
+                    <SelectItem value="all">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
                     {governorates.map((gov) => (
                       <SelectItem key={gov.value} value={gov.value}>
                         {locale === 'ar' ? gov.labelAr : gov.labelEn}
@@ -230,12 +230,12 @@ export function PropertySearch({ variant = 'inline' }: PropertySearchProps) {
               {/* Listing Type */}
               <div className="space-y-2">
                 <Label>{locale === 'ar' ? 'نوع العرض' : 'Listing Type'}</Label>
-                <Select value={listingType} onValueChange={setListingType}>
+                <Select value={listingType || 'all'} onValueChange={(v) => setListingType(v === 'all' ? '' : v)}>
                   <SelectTrigger>
                     <SelectValue placeholder={locale === 'ar' ? 'الكل' : 'All'} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
+                    <SelectItem value="all">{locale === 'ar' ? 'الكل' : 'All'}</SelectItem>
                     <SelectItem value="sale">{locale === 'ar' ? 'للبيع' : 'For Sale'}</SelectItem>
                     <SelectItem value="rent">{locale === 'ar' ? 'للإيجار' : 'For Rent'}</SelectItem>
                     <SelectItem value="both">{locale === 'ar' ? 'كلاهما' : 'Both'}</SelectItem>
